@@ -1,0 +1,21 @@
+#!/usr/bin/python
+#coding=utf-8
+__author__ = "Pedro Alvarez"
+__license__ = "Apache License 2.0"
+import urllib.request
+import urllib.parse
+import re
+import mysql.connector
+from datetime import date
+
+'''
+OBTENER VALORES DE SBS.GOB.PE
+'''
+today = date. today()
+today = today.strftime('%d/%m/%Y')
+params = urllib.parse.urlencode({'FECHA_CONSULTA': today}).encode()
+f = urllib.request.urlopen('http://www.sbs.gob.pe/app/pp/SISTIP_PORTAL/Paginas/Publicacion/TipoCambioPromedio.aspx', params)
+html = f.read().decode()
+change = str(re.findall('Dólar de N.A.</td><td class="APLI_fila2" width="30%">[0-9]*.[0-9]*</td><td class="APLI_fila2" width="30%">[0-9]*.[0-9]*</td>',html))
+numbers = re.findall('[0-9][0-9]*.[0-9][0-9]*',change)
+print ("CAMBIO COMPRA "+numbers[0]+" CAMBIO VENTA "+numbers[1])
